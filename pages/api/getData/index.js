@@ -18,22 +18,19 @@ const faunadb = require("faunadb");
 
 const secret = "fnAEdNrI_OACS-8WxrUCXlhUujSoN1GtSWc_uniL";
 const q = faunadb.query;
-const client = new faunadb.Client({secret});
+const client = new faunadb.Client({ secret, domain: "db.fauna.com" });
 
-module.exports = async (req,res) =>{
-try {
-  const dbs = await client.query(
-    q.Map(
-      q.Paginate(
-        q.Match(
-          q.Collection("todos")
+module.exports = async (req, res) => {
+  try {
+    const dbs = await client.query(
+          q.Map(
+            q.Paginate(q.Documents(q.Collection("todos"))),
+            q.Lambda("doc", q.Get(q.Var("doc")))
+          )
         )
-      ),
-      Ref = q.Get(Ref)
-    )
-  )
-  res.status(200).json(dbs.data);
-} catch (error) {
-  res.status(500).json({error: error.message})
-}
-}
+        
+    res.status(200).json(dbs.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
