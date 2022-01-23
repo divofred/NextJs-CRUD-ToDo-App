@@ -20,7 +20,7 @@ function TodoItem({ todo }) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ data: inputData, id: d }),
   };
-  // console.log(todo.data.done)
+  // console.log(todo.data.done
   const handleDelete = () => {
     d = todo.ref["@ref"].id;
     isDeleted(todo.ref["@ref"].id);
